@@ -6,9 +6,14 @@ import org.litepal.crud.DataSupport;
  * Created by lansenboy on 2018/6/8.
  */
 
+//LitePal 每个实体类 都需要继承 DataSupport
+
 public class Province extends DataSupport {
+
     private int id;
+    //记录省的名字
     private String provinceName;
+    //记录省的代号
     private int provinceCode;
 
     public int getId() {

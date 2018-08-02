@@ -3,13 +3,18 @@ package com.example.lansenboy.kuoutianqi.db;
 import org.litepal.crud.DataSupport;
 
 /**
+ *
  * Created by lansenboy on 2018/6/8.
  */
 
 public class City extends DataSupport {
+
     private int id;
+    // 市的名字
     private String cityName;
+    // 市的代号
     private int cityCode;
+    // 当前市 对应的省
     private int provinceId;
 
     public int getId() {
