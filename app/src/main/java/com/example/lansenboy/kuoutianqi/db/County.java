@@ -1,10 +1,12 @@
 package com.example.lansenboy.kuoutianqi.db;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by Administrator on 2018/8/2.
  */
 
-public class County {
+public class County extends DataSupport{
     private int id;
     //记录县的名字
     private String countyName;
