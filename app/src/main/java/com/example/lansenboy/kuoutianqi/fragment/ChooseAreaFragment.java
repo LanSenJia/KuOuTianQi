@@ -17,6 +17,8 @@ import com.example.lansenboy.kuoutianqi.db.City;
 import com.example.lansenboy.kuoutianqi.db.County;
 import com.example.lansenboy.kuoutianqi.db.Province;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class ChooseAreaFragment extends Fragment {
     /**
      * 省列表
      */
-    private List<Province> ProvinceLis;
+    private List<Province> provinceList;
 
     /**
      * 市列表
@@ -50,9 +52,9 @@ public class ChooseAreaFragment extends Fragment {
      */
     private City selectCity;
     /**
-     * 选中的县
+     * 当前选中的级别
      */
-    private County selectCounty;
+    private int currentLevel;
     private TextView titleText;
     private Button icBack;
     private ListView listview;
@@ -79,8 +81,63 @@ public class ChooseAreaFragment extends Fragment {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                if (currentLevel == LEVEL_PROVINCE) {
+                    selectProvince = provinceList.get(i);
+                    queryCities();
+                } else if (currentLevel == LEVEL_CITY) {
+                    selectCity = cityList.get(i);
+                    queryCounties();
+                }
             }
         });
+
+        icBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentLevel == LEVEL_COUNTY) {
+
+                } else if (currentLevel == LEVEL_CITY) {
+
+                }
+            }
+        });
+        queryProvinces();
+    }
+
+    /**
+     * 查询全国的省份，优先从数据库中查询，如果没有查询到再去服务器中查询
+     */
+    private void queryProvinces() {
+        titleText.setText("中国");
+        icBack.setVisibility(View.GONE);
+        provinceList = DataSupport.findAll(Province.class);
+        if (provinceList.size() > 0) {
+            dataList.clear();
+            for (Province province : provinceList) {
+                dataList.add(province.getProvinceName());
+            }
+            adapter.notifyDataSetChanged();
+            listview.setSelection(0);
+            currentLevel = LEVEL_PROVINCE;
+        } else {
+            String address = "http://guolin.tech/api/china";
+//            queryFromServer(address, "province");
+        }
+
+    }
+
+    /**
+     * 查询省内所有市，优先从数据库中查询，如果没有查询到再去服务器中查询
+     */
+    private void queryCities() {
+        titleText.setText(selectProvince.getProvinceName());
+        icBack.setVisibility(View.VISIBLE);
+        cityList = DataSupport.where("provinced = ?", String.valueOf(selectProvince.getId())).find(City.class);
+    }
+
+    private void queryCounties() {
+    }
+
+    private void queryFromServer() {
     }
 }
